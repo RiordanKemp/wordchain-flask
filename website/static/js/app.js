@@ -109,7 +109,8 @@ function starttimer(){
 
  if (remaining <= 0) {
     clearInterval(timer);
-    console.log("Countdown finished!");
+    document.getElementById("timetext").innerHTML = "Time Left: None";
+    resetGame();
   } else {
     const minutes = Math.floor(remaining / 1000 / 60);
     const seconds = Math.floor((remaining / 1000) % 60);
