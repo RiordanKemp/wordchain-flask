@@ -1,0 +1,126 @@
+
+
+#normalButton{
+    background-color: green;
+    text-align: center;
+    color: greenyellow;
+    font-weight: bold;
+    width: 120px;
+    height: 30px;
+      border-radius: 3px;
+  border-style: solid;
+    margin-right: 20px;
+    border: solid #000000;
+}
+
+#hardButton{
+    background-color: red;
+    text-align: center;
+    font-weight: bold;
+    color: rgb(107, 11, 11);
+    width: 120px;
+    height: 30px;
+          border-radius: 3px;
+  border-style: solid;
+    margin-left: 20px;
+    border: solid #000000;
+}
+
+.debug{
+    display: none;
+}
+
+.centered{
+    text-align: center;
+}
+
+.diffbuttons{
+     justify-content: center;
+    display: flex;   
+}
+
+.centerbtn{
+    justify-content: center;
+    display: flex;
+}
+
+#buttonmain{
+    display: none;
+    scale: 1.5;
+    margin-top: 20px;
+    font-weight: bold;
+    border: solid;
+}
+
+.wordsubmission{
+    display: none;
+    margin-top: 10px;
+}
+
+#submitword{
+    border: solid;
+    margin-left: 10px;
+}
+
+#gametitle{
+    font-size: 4em;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 10px;
+
+}
+
+.titledifftime{
+    justify-content: center;
+    display: block;
+    margin-top: -90px;
+    margin-bottom: 90px;
+}
+
+#timetext{
+    margin-left: 850px;
+    margin-top: -50px;
+}
+
+#buttonreset{
+    display: none;
+    margin-top: 60px;
+    font-weight: bold;
+    font-size: 2em;
+    border-style: solid;
+    border-width: 5px;
+    position: absolute;
+    top: 80%;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
+
+#fwtext{
+    display: none;
+    margin-top: 10px;
+    border-top: 15px solid #232323;
+    padding-top: 10px;
+}
+
+#fail{
+    text-align: center;
+    color: rgb(171, 0, 0);
+    font-weight: bold;
+
+}
+
+
+#outputparent{
+    font-weight: bold;
+    text-align: center;
+    font-size: 3em;
+}
+
+#outputdef{
+    text-align: center;
+}
+
+.testingsubmission{
+    display: none;
+}

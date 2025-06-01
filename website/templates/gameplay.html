@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Modified{% endblock %}
+
+{% block content %}
+<h1>This is the Gameplay page</h1>
+<h2 id = "diffreader">Difficulty: {{ diff }}</h2>
+
+       <div class = "wordsubmission">
+      <input type="text" id="wordinput" placeholder="Enter word here...">
+    <button id="submitword" onclick="submitWord()">Submit Word</button>
+</div>
+
+        <div id="outputparent"></div>
+        <div id="output-diff"></div>
+
+
+
+    <script>
+
+    </script>
+
+{% endblock %}
