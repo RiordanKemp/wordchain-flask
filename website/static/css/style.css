@@ -5,8 +5,8 @@
     text-align: center;
     color: greenyellow;
     font-weight: bold;
-    width: 120px;
-    height: 30px;
+    width: 144px;
+    height: 36px;
       border-radius: 3px;
   border-style: solid;
     margin-right: 20px;
@@ -18,8 +18,8 @@
     text-align: center;
     font-weight: bold;
     color: rgb(107, 11, 11);
-    width: 120px;
-    height: 30px;
+    width: 144px;
+    height: 36px;
           border-radius: 3px;
   border-style: solid;
     margin-left: 20px;
@@ -37,6 +37,7 @@
 .diffbuttons{
      justify-content: center;
     display: flex;   
+    margin-top: 10px;
 }
 
 .centerbtn{
@@ -47,9 +48,10 @@
 #buttonmain{
     display: none;
     scale: 1.5;
-    margin-top: 20px;
+    margin-top: 0px;
     font-weight: bold;
     border: solid;
+    background-color: #bbbbbb;
 }
 
 .wordsubmission{
@@ -58,6 +60,11 @@
 }
 
 #submitword{
+    border: solid;
+    margin-left: 10px;
+}
+
+#submitchildword{
     border: solid;
     margin-left: 10px;
 }
@@ -94,13 +101,14 @@
     left: 50%;
     -ms-transform: translate(-50%, -50%);
     transform: translate(-50%, -50%);
+    background-color: #aaaaaa;
 }
 
 #fwtext{
     display: none;
-    margin-top: 10px;
+    /* margin-top: 10px;
     border-top: 15px solid #232323;
-    padding-top: 10px;
+    padding-top: 10px; */
 }
 
 #fail{
@@ -119,6 +127,18 @@
 
 #outputdef{
     text-align: center;
+}
+
+#chaintop{
+    margin-top: 10px;
+    border-top: 15px solid #232323;
+    padding-top: 10px;
+    display: none;
+}
+
+
+.dispnone{
+    display: none;
 }
 
 .testingsubmission{

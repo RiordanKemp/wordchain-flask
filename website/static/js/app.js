@@ -72,6 +72,8 @@ function runMain(){
     document.getElementById("buttonmain").style.display = "none";
     document.getElementById("diffexpl").style.display = "none";
     document.getElementById("fwtext").style.display = "block";
+    document.getElementById("chaintop").style.display = "block";
+
     document.getElementById("buttonreset").style.display = "block";
 
     $.ajax({
@@ -95,24 +97,27 @@ function starttimer(){
     let timetext = document.getElementById("timetext");
 
     timetext.innerHTML = "Starting soon...";
-let timeLeft = 600; 
+
+  const fiveMinutes = 5 * 60 * 1000; // 5m in milliseconds
+  const endTime = Date.now() + fiveMinutes;
 
   timer = setInterval(() => {
-  const minutes = Math.floor(timeLeft / 60);
-  const seconds = timeLeft % 60;
+      const now = Date.now();
+  const remaining = endTime - now;
+//   const minutes = Math.floor(timeLeft / 60);
+//   const seconds = timeLeft % 60;
+
+ if (remaining <= 0) {
+    clearInterval(timer);
+    console.log("Countdown finished!");
+  } else {
+    const minutes = Math.floor(remaining / 1000 / 60);
+    const seconds = Math.floor((remaining / 1000) % 60);
 
   string = "Time Left: " + (`${minutes}:${seconds < 10 ? '0' : ''}${seconds}`);
   document.getElementById("timetext").innerHTML = string;
-
-  timeLeft--;
-
-  if (timeLeft < 0) {
-    clearInterval(timer);
-      document.getElementById("timetext").innerHTML = ("Time Left: None");
-      resetGame()
-  }
-}, 1000);
-}
+ }
+}, 1000)};
 
 
 function submitFirstWord(){
@@ -129,12 +134,15 @@ function submitFirstWord(){
             var errormsg = splityield[0]
             var error = splityield[1]
             var wordchain = splityield[2]
+            var childmin = splityield[3]
+            var childmax = splityield[4]
 
             if (error == "NOERROR"){
-            resetchildword(errormsg, wordchain);
+                resetchildword(wordchain);
+                initial_word_done(childmin, childmax, errormsg);
             }
             else{
-            document.getElementById('fail').innerHTML = errormsg;
+                document.getElementById('fail').innerHTML = errormsg;
             }
 
 
@@ -146,10 +154,30 @@ function submitFirstWord(){
         
 }
 
-function resetchildword(prevword, wordchain){
-    document.getElementById('fail').innerHTML = "";
+function initial_word_done(childMin, childMax, prevword){
+    document.getElementById('submitword').style.display = "none";
+    document.getElementById('wordinput').style.display = "none";
+    document.getElementById('submitchildword').style.display = "inline-block";
+    document.getElementById('childwordinput').style.display = "inline-block";
+
+    checkDifficulty(prevword, childMin, childMax);
+}
+
+function difficulty_update(difficulty, prevword, childmin, childmax){
+
     let buildletter = prevword.slice(-1).toUpperCase();
-    document.getElementById('fwtext').innerHTML = "Enter a child word built from letters of the parent word, and <u>starting with the letter \"" + buildletter + "\"</u>.<br>If you are playing in Hard Mode, child words must be within +-2 length of the parent.";
+
+    if (difficulty == "F"){
+    document.getElementById('fwtext').innerHTML = "Enter a child word built from letters of the parent word, and <u>starting with the letter \"" + buildletter + "\"</u>."
+    }
+    else{
+        document.getElementById('fwtext').innerHTML = "Enter a child word built from letters of the parent word, and <u>starting with the letter \"" + buildletter + "\"</u>.<br>Since you are playing on Hard Mode, child words must be " + childmin + " to " + childmax + " letters.";
+    }
+
+}
+
+function resetchildword(wordchain){
+    document.getElementById('fail').innerHTML = "";
 
     wordchaintext = document.getElementById('wordchain');
     wordchaintext.innerHTML = "My Chain: " + wordchain;
@@ -169,9 +197,13 @@ function submitChildWord(){
             var errormsg = splityield[0]
             var error = splityield[1]
             var wordchain = splityield[2]
+            var childmin = splityield[3]
+            var childmax = splityield[4]
 
             if (error == "NOERROR"){
-            resetchildword(errormsg, wordchain);
+            resetchildword(wordchain);
+            checkDifficulty(errormsg, childmin, childmax);
+
             }
             else{
             document.getElementById('fail').innerHTML = errormsg;
@@ -193,13 +225,41 @@ function resetGame(){
     }
 
     document.getElementById("timetext").innerHTML = ("Time Left: None");
-    clearInterval(timer)
+    clearInterval(timer);
+
+    $.ajax({
+    url: '/checkchain',
+    type: 'POST',
+    success: function(response) {
+        chain_str = response;
+        chainText = document.getElementById("wordchain");
+        chainText.style.fontSize = "2em";
+        chainText.innerHTML = chain_str;
+
+
+    },
+    error: function(error) {
+        console.log(error);
+    }
+});
+
 
 }
 
-const link = encodeURI(window.location.href);
-const msg = encodeURIComponent("Hey, look at what I got at today's word chain!");
-const title = encodeURIComponent(document.querySelector('title').textContent);
+function checkDifficulty(prevword, childmin, childmax){
+    $.ajax({
+        url: '/checkdiff',
+        type: 'POST',
+        success: function(response) {
+            difficulty = response;
+            difficulty_update(difficulty, prevword, childmin, childmax);
 
-const fb = document.querySelector('.facebook');
-fb.href = `https://www.facebook.com/share.php?u${link}`;
+
+
+        },
+        error: function(error) {
+            console.log(error);
+        }
+    });
+
+}

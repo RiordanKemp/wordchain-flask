@@ -10,7 +10,7 @@
 </div>
 
 <h3 id="diffsel" class="centered hidediff">Please select a difficulty.</h3>
-<h4 id="diffexpl" class="centered">Hard Mode requires child words to be within +-2 length of the parent.</h4>
+<h4 id="diffexpl" class="centered">Hard Mode requires child words to be within +-3 length of the parent.</h4>
 
     <div id="outputparent"></div>
     <div id="outputdef"></div>
@@ -25,12 +25,18 @@
        <button id="senddata" onclick="sendData()">Send Data</button>
        </div>
 
-        <p id="fwtext" class="centered rstremove">Enter a child word built from letters of the parent word.<br>If you are playing in Hard Mode, child words must be within +-2 length of the parent.</p>
-               <p id="wordchain" class="centered"></p>
+        <div id="chaintop"></div>      
+                <p id="fwtext" class="centered rstremove">Enter an initial word built from letters of the parent word.</p>
+ 
+        <p id="wordchain" class="centered"></p>
 
         <div class = "centerbtn wordsubmission">
-      <input type="text" class="rstremove" id="wordinput" placeholder="Enter child word here...">
+      <input type="text" class="rstremove" id="wordinput" placeholder="Enter initial word here...">
+    <input type="text" class="rstremove dispnone" id="childwordinput" placeholder="Enter child word here...">
+
     <button id="submitword" class="rstremove" onclick="submitFirstWord()">Submit Word</button>
+        <button id="submitchildword" class="rstremove dispnone" onclick="submitChildWord()">Submit Word</button>
+
     </div>
 
         <button class="debug" onclick="checkDifficulty()">Check Diff</button>
@@ -45,19 +51,26 @@
         <div id="output-diff"></div>
 
 
+       
+
+
+
     <script>
-        function checkDifficulty() {
-            $.ajax({
-                url: '/checkdiff',
-                type: 'POST',
-                success: function(response) {
-                    document.getElementById('output-diff').innerHTML = response;
-                },
-                error: function(error) {
-                    console.log(error);
-                }
-            });
-        }
+        const textInput = document.getElementById('wordinput');
+        const childTextInput = document.getElementById('childwordinput');
+
+    textInput.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter') {
+        console.log('Enter key pressed!');
+        submitFirstWord();
+      }
+    });
+
+        childTextInput.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter') {
+        submitChildWord();
+      }
+    });
     </script>
 
 {% endblock %}

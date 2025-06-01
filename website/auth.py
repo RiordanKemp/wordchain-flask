@@ -7,7 +7,7 @@ difficultyDetails = "\nHard Mode requires child words to be +-1 in length relati
 hardmodeEnabled = "\nYou've chosen to play on Hard Mode.  Hard Mode requires child words to be +-1 in length relative to their parent."
 exitMessage = "Thanks for playing! Exiting now..."
 reset_message = "Resetting the round now.."
-word_doesnt_exist_error = "This word does not exist."
+input_str = ""
 
 difficultyOnGLOB = False
 wordchainGLOB = []
@@ -71,9 +71,15 @@ def difficulty():
 @auth.route('/checkdiff', methods=['POST'])
 def checkdiff():
     if (difficultyOnGLOB):
-        return "Difficulty is Hard"
-    elif (difficultyOnGLOB == False):
-        return "Difficulty is Normal"
+        return "T"
+    else:
+        return "F"
+    
+@auth.route('/checkchain', methods=['POST'])
+def checkchain():
+    wordchain = "⫘⫘⫘".join(wordchainGLOB)
+    wordchain = f"<b> {wordchain} </b>"
+    return wordchain
     
 
 def open_files():
@@ -113,6 +119,7 @@ def organize_dictionary(filereader_list):
                 word_addition(word_key, word_def, letter_key)
 
 def word_addition(word_key, word_def, letter_key):
+    vowels = "a", "e", "i", "o", "u", 
     if len(word_key) < 3:
         return
 
@@ -128,7 +135,15 @@ def word_addition(word_key, word_def, letter_key):
         numb_dict[word_key] = 1
 
     if len(word_key) > 8:
-        starting_words_set.add(word_key)
+        unique_vowel = ""
+        uv_count = 0
+        for letter in word_key:
+            if letter.lower() in vowels and letter.lower() not in unique_vowel:
+                unique_vowel += letter.lower()
+                uv_count += 1
+
+        if (uv_count > 1):
+            starting_words_set.add(word_key)
 
 @auth.route("/first_word", methods=["POST"])
 def first_word():
@@ -146,12 +161,11 @@ def first_word():
     print("input str:", input_str)
 
     if input_str not in words_dict:
-        print(word_doesnt_exist_error)
-        return word_doesnt_exist_error
+        return f"\"{input_str}\"  does not exist."
 
     if input_str in already_used_words_set:
         print("You already used this word.")
-        return "ALREADYUSEDWORD"
+        return ("You already used this word.")
 
     letter_use_dict = {}
     character_limit_exceeded = False
@@ -178,26 +192,27 @@ def first_word():
 
     if (invalid_character_used):
             print("You used letter \"{}\", which is not part of the parent word.".format(invalid_character.capitalize()))
-            return f"You used letter {invalid_character}, which is not part of the parent word." #+ "| ERROR"
+            return f"You used the letter \"{invalid_character.capitalize()}\", which is not part of the parent word." #+ "| ERROR"
 
     if (character_limit_exceeded):
-            overuse_count = valid_letters_dict[letter] - letter_use_dict[character]
-            print("You used the letter {} {} times, but the maximum is {}.".format(overused_letter, overuse_count, valid_letters_dict[letter]))
-            return "You used the letter \"{}\" {} times, but the maximum is {}.".format(overused_letter.capitalize(), overuse_count, valid_letters_dict[letter])
+            overuse_count = 0
+            for letter in input_str:
+                if letter.lower() == overused_letter.lower():
+                    overuse_count += 1
+            print("You used the letter {} {} times, but the maximum is {}.".format(overused_letter, overuse_count, valid_letters_dict[overused_letter]))
+            return "You used the letter \"{}\" {} times, but the maximum is {}.".format(overused_letter.capitalize(), overuse_count, valid_letters_dict[overused_letter])
 
-    input_length = len(input_str)
     parent_length = len(parent_word)
-    different_length = parent_length - input_length
-    if (different_length > 2 or different_length < -2) and difficultyOn:
-        print("This word should have {} to {} characters, but it has {} instead.".format(parent_length - 2, parent_length + 2, input_length))
-        return ("This word should have {} to {} characters, but it has {} instead.".format(parent_length - 2, parent_length + 2, input_length))
+    parent_min = str(parent_length - 3)
+    parent_max = str(parent_length + 3)
 
     already_used_words_set.add(input_str)
 
     wordchainGLOB.append(input_str)
     last_wordGLOB = input_str
-    wordchain = "---".join(wordchainGLOB)
-    return input_str + "|NOERROR|" + wordchain
+    wordchain = "⫘⫘⫘".join(wordchainGLOB)
+    wordchain = f"<b> {wordchain} </b>"
+    return input_str + "|NOERROR|" + wordchain + "|" + parent_min + "|" + parent_max
 
 
 @auth.route("/child_word", methods=["POST"])
@@ -216,8 +231,7 @@ def child_word():
     print("input str:", input_str)
 
     if input_str not in words_dict:
-        print(word_doesnt_exist_error)
-        return word_doesnt_exist_error
+        return f"\"{input_str}\"  does not exist."
 
     if input_str in already_used_words_set:
         print("You already used this word.")
@@ -244,6 +258,7 @@ def child_word():
         if (letter_use_dict[character] < 0):
             character_limit_exceeded = True
             overused_letter = character
+            overuse_count = input_str.replace(character, "")
 
 
     if (invalid_character_used):
@@ -251,16 +266,22 @@ def child_word():
             return f"You used letter {invalid_character}, which is not part of the parent word." #+ "| ERROR"
 
     if (character_limit_exceeded):
-            overuse_count = valid_letters_dict[letter] - letter_use_dict[character]
-            print("You used the letter {} {} times, but the maximum is {}.".format(overused_letter, overuse_count, valid_letters_dict[letter]))
-            return "You used the letter \"{}\" {} times, but the maximum is {}.".format(overused_letter.capitalize(), overuse_count, valid_letters_dict[letter])
+            overuse_count = 0
+            for letter in input_str:
+                if letter.lower() == overused_letter.lower():
+                    overuse_count += 1
+            print("Valid letters dict #: {} {}".format(letter, valid_letters_dict[overused_letter]))
+
+            print("You used the letter {} {} times, but the maximum is {}.".format(overused_letter, overuse_count, valid_letters_dict[overused_letter]))
+            return ("You used the letter \"{}\" {} times, but the maximum is {}.".format(overused_letter.capitalize(), overuse_count, valid_letters_dict[overused_letter]))
 
     input_length = len(input_str)
     parent_length = len(parent_word)
     different_length = parent_length - input_length
-    if (different_length > 2 or different_length < -2) and difficultyOn:
-        print("This word should have {} to {} characters, but it has {} instead.".format(parent_length - 2, parent_length + 2, input_length))
-        return "This word should have {} to {} characters, but it has {} instead.".format(parent_length - 2, parent_length + 2, input_length)
+    print("difficulty on:", difficultyOn, "diff length:", different_length, "input:", input_length)
+    if (different_length > 3 or different_length < -3) and difficultyOn:
+        print("This word should have {} to {} characters, but it has {} instead.".format(parent_length - 3, parent_length + 3, input_length))
+        return "This word should have {} to {} characters, but it has {} instead.".format(parent_length - 3, parent_length + 3, input_length)
 
     if (input_str[0] != starting_letter):
         print("This word should start with {}, but it starts with {} instead.".format(starting_letter, input_str[0]))
@@ -268,11 +289,15 @@ def child_word():
 
 
     already_used_words_set.add(input_str)
+    parent_length = len(parent_word)
+    parent_min = str(parent_length - 3)
+    parent_max = str(parent_length + 3)
 
     wordchainGLOB.append(input_str)
     last_wordGLOB = input_str
-    wordchain = "---".join(wordchainGLOB)
-    return input_str + "|NOERROR|" + wordchain
+    wordchain = "⫘⫘⫘".join(wordchainGLOB)
+    wordchain = f"<b> {wordchain} </b>"
+    return input_str + "|NOERROR|" + wordchain + "|" + parent_min + "|" + parent_max
 
 
 
