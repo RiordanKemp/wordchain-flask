@@ -210,7 +210,7 @@ def first_word():
 
     wordchainGLOB.append(input_str)
     last_wordGLOB = input_str
-    wordchain = "⫘⫘⫘".join(wordchainGLOB)
+    wordchain = "⫘⫘".join(wordchainGLOB)
     wordchain = f"<b> {wordchain} </b>"
     return input_str + "|NOERROR|" + wordchain + "|" + parent_min + "|" + parent_max
 
@@ -295,7 +295,7 @@ def child_word():
 
     wordchainGLOB.append(input_str)
     last_wordGLOB = input_str
-    wordchain = "⫘⫘⫘".join(wordchainGLOB)
+    wordchain = "⫘⫘".join(wordchainGLOB)
     wordchain = f"<b> {wordchain} </b>"
     return input_str + "|NOERROR|" + wordchain + "|" + parent_min + "|" + parent_max
 
