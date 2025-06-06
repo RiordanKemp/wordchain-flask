@@ -77,7 +77,7 @@ def checkdiff():
     
 @auth.route('/checkchain', methods=['POST'])
 def checkchain():
-    wordchain = "⫘⫘⫘".join(wordchainGLOB)
+    wordchain = "⫘⫘".join(wordchainGLOB)
     wordchain = f"<b> {wordchain} </b>"
     return wordchain
     
