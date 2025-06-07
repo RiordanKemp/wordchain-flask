@@ -57,6 +57,7 @@ def difficulty():
         difficultyOnGLOB = True
     elif hardmode == "Disabled":
         difficultyOnGLOB = False
+    return "valid"
 
 @auth.route('/checkdiff', methods=['POST'])
 def checkdiff():
