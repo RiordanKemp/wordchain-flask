@@ -1,5 +1,19 @@
 let timer = null;
 
+function intButton(integerButton){
+    $.ajax({
+        url: '/checkint',
+        type: 'GET',
+        success: function(response) {
+            random_int = response;
+            integerButton.innerHTML = random_int;
+        },
+        error: function(error) {
+            console.log(error);
+        }
+    });
+}
+
 function normalMode(normalbutton){
     let hardbutton = document.getElementById("hardButton"); 
 
